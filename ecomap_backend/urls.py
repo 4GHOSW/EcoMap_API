@@ -24,9 +24,12 @@ from django.urls import path, include
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Your API Title",
+        title="Authentication API",
         default_version='v1',
-        description="API documentation for the authentication endpoints",
+        description="오세웅 ㅎㅇ",
+        terms_of_service="https://www.heuton.kr",
+        contact=openapi.Contact(email="contact@yourapp.com"),
+        license=openapi.License(name="Your License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),

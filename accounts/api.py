@@ -26,8 +26,24 @@ class SignUpView(APIView):
             required=['email', 'password']
         ),
         responses={
-            201: openapi.Response(description="User created successfully."),
-            400: openapi.Response(description="Validation error or missing fields.")
+            201: openapi.Response(
+                description="User created successfully",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'message': openapi.Schema(type=openapi.TYPE_STRING, description='Success message'),
+                    }
+                )
+            ),
+            400: openapi.Response(
+                description="Bad request",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(type=openapi.TYPE_OBJECT, description='Error details')
+                    }
+                )
+            )
         }
     )
     def post(self, request):
@@ -74,9 +90,34 @@ class LoginView(APIView):
             required=['email', 'password']
         ),
         responses={
-            200: openapi.Response(description="JWT tokens returned upon successful authentication."),
-            401: openapi.Response(description="Invalid email or password."),
-            400: openapi.Response(description="Email and password are required."),
+            200: openapi.Response(
+                description="Login successful",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'refresh': openapi.Schema(type=openapi.TYPE_STRING, description='JWT refresh token'),
+                        'access': openapi.Schema(type=openapi.TYPE_STRING, description='JWT access token'),
+                    }
+                )
+            ),
+            400: openapi.Response(
+                description="Bad request",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(type=openapi.TYPE_STRING, description='Error message')
+                    }
+                )
+            ),
+            401: openapi.Response(
+                description="Unauthorized",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(type=openapi.TYPE_STRING, description='Error message')
+                    }
+                )
+            )
         }
     )
     def post(self, request):

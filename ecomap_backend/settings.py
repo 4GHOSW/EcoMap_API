@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-&e$dncz!b2v(qo3u@6bqbsk8@&rc&fjod2zf8jy9kz8d^gu39-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1', 'https://ecomap-api-1xa2.onrender.com']
 
 # Application definition
 
@@ -109,13 +109,13 @@ LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 리디렉션할 URL
 from decouple import config
 
 SOCIALACCOUNT_PROVIDERS = {
-    'naver': {
-        'APP': {
-            'client_id': '6yK0bKiUWtpIhKXVUuro',
-            'secret': config('NAVER_SECRET'),
-            'key': ''
-        }
-    },
+    # 'naver': {
+    #     'APP': {
+    #         'client_id': '6yK0bKiUWtpIhKXVUuro',
+    #         'secret': config('NAVER_SECRET'),
+    #         'key': ''
+    #     }
+    # },
     'kakao': {
         'APP': {
             'client_id': '',
@@ -188,4 +188,6 @@ SIMPLE_JWT = {
 }
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # collectstatic으로 수집될 경로
+STATICFILES_DIRS = [BASE_DIR / 'static']  # 추가적인 정적 파일 경로
+
