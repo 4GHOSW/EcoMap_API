@@ -197,8 +197,11 @@ class KakaoLogin(APIView):
 
         kakao_data = kakao_response.json()
         kakao_id = kakao_data.get('id')
-        email = kakao_data.get('kakao_account', {}).get('email')
+        # email = kakao_data.get('kakao_account', {}).get('email')
+        nickname = kakao_data.get('profile_nickname')
         profile_image = kakao_data.get('kakao_account', {}).get('profile', {}).get('profile_image_url')
+        print(f'카카오 로그인!!! -> nickname : {nickname}')
+        print(f'카카오 로그인!!! -> profile_image : {profile_image}')
 
         # 필수 정보가 없는 경우 처리
         if not kakao_id:
@@ -210,8 +213,8 @@ class KakaoLogin(APIView):
         except User.DoesNotExist:
             # 해당 카카오 ID로 사용자가 없으면 새로운 사용자 생성
             user = User(
-                username=f'kakao_{kakao_id}',
-                email=email,
+                username=nickname,
+                # email=email,
                 kakao_id=kakao_id,
                 sign_up_platform=User.LOGIN_KAKAO
             )
@@ -226,7 +229,6 @@ class KakaoLogin(APIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }, status=status.HTTP_200_OK)
-
 
 
 # from rest_framework import status
