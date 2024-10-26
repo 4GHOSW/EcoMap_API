@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.kakao', 
 
+    'drf_yasg',
+    
     'accounts.apps.AccountsConfig',
 ]
 
