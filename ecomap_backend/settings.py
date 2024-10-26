@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao', 
 
     'drf_yasg',
-    
+
     'accounts.apps.AccountsConfig',
 ]
 
@@ -130,7 +130,6 @@ ACCOUNT_EMAIL_REQUIRED = True  # 이메일 필수
 ACCOUNT_USERNAME_REQUIRED = False  # 사용자 이름을 요구하지 않음
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # 이메일 인증 필수 ('optional' 또는 'none'으로 설정 가능)
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # 사용자 모델에서 username 필드를 사용하지 않음
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5  # 로그인 시도 제한
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300  # 제한 시간 (초)
 
 # Password validation
@@ -187,3 +186,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
