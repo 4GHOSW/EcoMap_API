@@ -104,19 +104,21 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = '/'  # 로그인 후 리디렉션할 URL
 LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 리디렉션할 URL
 
+from decouple import config
+
 SOCIALACCOUNT_PROVIDERS = {
     'naver': {
         'APP': {
-            'client_id': 'YOUR_CLIENT_ID',
-            'secret': 'YOUR_CLIENT_SECRET',
+            'client_id': '6yK0bKiUWtpIhKXVUuro',
+            'secret': config('NAVER_SECRET'),
             'key': ''
         }
     },
     'kakao': {
         'APP': {
-            'client_id': 'a6d209261533e73a52480861deb8659e',
+            'client_id': '',
             'secret': '',
-            'key': ''
+            'key': config("KAKAO_KEY")
         }
     }
 }
@@ -180,6 +182,6 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=3650),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }

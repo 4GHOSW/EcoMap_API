@@ -8,8 +8,28 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.exceptions import ValidationError
+from drf_yasg.utils       import swagger_auto_schema
+from drf_yasg             import openapi
 
 class SignUpView(APIView):
+    @swagger_auto_schema(
+        operation_summary="User Sign Up",
+        operation_description="Registers a new user with email, password, first name, and last name.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='User password'),
+                'first_name': openapi.Schema(type=openapi.TYPE_STRING, description='User first name', default=""),
+                'last_name': openapi.Schema(type=openapi.TYPE_STRING, description='User last name', default=""),
+            },
+            required=['email', 'password']
+        ),
+        responses={
+            201: openapi.Response(description="User created successfully."),
+            400: openapi.Response(description="Validation error or missing fields.")
+        }
+    )
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -42,6 +62,23 @@ class SignUpView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
+    @swagger_auto_schema(
+        operation_summary="User Login",
+        operation_description="Authenticates user with email and password, returning JWT tokens on success.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='User password'),
+            },
+            required=['email', 'password']
+        ),
+        responses={
+            200: openapi.Response(description="JWT tokens returned upon successful authentication."),
+            401: openapi.Response(description="Invalid email or password."),
+            400: openapi.Response(description="Email and password are required."),
+        }
+    )
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -62,7 +99,6 @@ class LoginView(APIView):
             }, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid email or password.'}, status=status.HTTP_401_UNAUTHORIZED)
-
 
 class NaverLogin(APIView):
     def post(self, request):
@@ -120,6 +156,30 @@ class NaverLogin(APIView):
         }, status=status.HTTP_200_OK)
 
 class KakaoLogin(APIView):
+    @swagger_auto_schema(
+        operation_summary="Kakao Login",
+        operation_description="Logs in a user via Kakao OAuth and issues JWT tokens upon successful authentication.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'access_token': openapi.Schema(type=openapi.TYPE_STRING, description="Access token from Kakao OAuth")
+            },
+            required=['access_token']
+        ),
+        responses={
+            200: openapi.Response(
+                description="JWT tokens issued upon successful authentication.",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'refresh': openapi.Schema(type=openapi.TYPE_STRING, description="Refresh token for session management"),
+                        'access': openapi.Schema(type=openapi.TYPE_STRING, description="Access token for API access"),
+                    }
+                )
+            ),
+            400: openapi.Response(description="Error in authentication or missing access token.")
+        }
+    )
     def post(self, request):
         access_token = request.data.get('access_token')
         if not access_token:
