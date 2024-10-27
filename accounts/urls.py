@@ -7,6 +7,6 @@ urlpatterns = [
     path('auth/eco/signup/', SignUpView.as_view(), name='signup'),
     path('auth/eco/login/', LoginView.as_view(), name='login'),
     path('auth/eco/refresh/', TokenRefreshView.as_view(), name='refreshToken'),
-    path('info/<int:user_id>/carbon/', UserCarbonView.as_view(), name='user-carbon'),
+    path('info/carbon/', UserCarbonView.as_view(), name='user-carbon'),
 
 ]
