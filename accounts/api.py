@@ -20,8 +20,7 @@ class SignUpView(APIView):
             properties={
                 'email': openapi.Schema(type=openapi.TYPE_STRING, description='User email'),
                 'password': openapi.Schema(type=openapi.TYPE_STRING, description='User password'),
-                'first_name': openapi.Schema(type=openapi.TYPE_STRING, description='User first name', default=""),
-                'last_name': openapi.Schema(type=openapi.TYPE_STRING, description='User last name', default=""),
+                'name': openapi.Schema(type=openapi.TYPE_STRING, description='User first name', default=""),
             },
             required=['email', 'password']
         ),
@@ -49,8 +48,7 @@ class SignUpView(APIView):
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-        first_name = request.data.get('first_name', '')
-        last_name = request.data.get('last_name', '')
+        name = request.data.get('name', '')
 
         # 이메일과 비밀번호 필수 검사
         if not email or not password:
@@ -67,8 +65,7 @@ class SignUpView(APIView):
             user = User.objects.create_user(
                 username=email,  # 이메일을 username으로 사용
                 email=email,
-                first_name=first_name,
-                last_name=last_name,
+                first_name=name,
                 sign_up_platform=User.LOGIN_EMAIL
             )
             user.set_password(password)
