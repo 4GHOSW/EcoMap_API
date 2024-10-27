@@ -11,24 +11,18 @@ from rest_framework.exceptions import ValidationError
 from drf_yasg.utils       import swagger_auto_schema
 from drf_yasg             import openapi
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from .models import User, UserCarbon
-
 
 class UserCarbonView(APIView):
     """
-    API to retrieve user's name and total carbon.
+    API to retrieve authenticated user's name and total carbon.
     """
+    permission_classes = [IsAuthenticated]  # 인증된 사용자만 접근 가능
+
     @swagger_auto_schema(
-        operation_summary="Get User's Total Carbon",
-        operation_description="Fetches the name and total carbon emission for a given user.",
-        manual_parameters=[
-            openapi.Parameter(
-                'user_id', openapi.IN_PATH,
-                description="ID of the user to retrieve information for",
-                type=openapi.TYPE_INTEGER
-            )
-        ],
+        operation_summary="Get Authenticated User's Total Carbon",
+        operation_description="Fetches the authenticated user's name and total carbon emission.",
         responses={
             200: openapi.Response(
                 description="User data retrieved successfully",
@@ -36,12 +30,12 @@ class UserCarbonView(APIView):
                     type=openapi.TYPE_OBJECT,
                     properties={
                         'name': openapi.Schema(type=openapi.TYPE_STRING, description="User's name"),
-                        'total_carbon': openapi.Schema(type=openapi.TYPE_NUMBER, description="User's total carbon emission"),
+                        'totalCarbon': openapi.Schema(type=openapi.TYPE_NUMBER, description="User's total carbon emission"),
                     }
                 )
             ),
-            404: openapi.Response(
-                description="User not found",
+            401: openapi.Response(
+                description="Unauthorized",
                 schema=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
@@ -51,24 +45,24 @@ class UserCarbonView(APIView):
             )
         }
     )
-    def get(self, request, user_id):
-        # 유저와 관련된 total_carbon 데이터를 가져옵니다.
-        user = get_object_or_404(User, id=user_id)
+    def get(self, request):
+        # 현재 인증된 사용자 가져오기
+        user = request.user
         user_carbon = UserCarbon.objects.filter(user=user).order_by('-updated_at').first()
         
         if user_carbon:
             data = {
                 'name': user.first_name,
-                'totalCarbon': user_carbon.total_carbon,
+                'total_carbon': user_carbon.total_carbon,
             }
         else:
             data = {
                 'name': user.first_name,
-                'totalCarbon': 0.0,  # 기본값 설정
+                'total_carbon': 0.0,  # 기본값 설정
             }
         
-        return Response(data, status=status.HTTP_200_OK)
-    
+        return Response(data, status=status.HTTP_200_OK)    
+
 class TokenRefreshView(APIView):
     @swagger_auto_schema(
         operation_summary="Refresh Access Token",
