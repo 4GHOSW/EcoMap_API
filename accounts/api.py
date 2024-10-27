@@ -11,7 +11,9 @@ from rest_framework.exceptions import ValidationError
 from drf_yasg.utils       import swagger_auto_schema
 from drf_yasg             import openapi
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 class TokenRefreshView(APIView):
     @swagger_auto_schema(
         operation_summary="Refresh Access Token",
@@ -68,6 +70,7 @@ class TokenRefreshView(APIView):
             # Refresh token이 유효하지 않을 경우
             return Response({'error': 'Invalid token. Could not refresh tokens.'}, status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 class SignUpView(APIView):
     @swagger_auto_schema(
         operation_summary="User Sign Up",
@@ -131,6 +134,7 @@ class SignUpView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 class LoginView(APIView):
     @swagger_auto_schema(
         operation_summary="User Login",
