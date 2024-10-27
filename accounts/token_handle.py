@@ -40,6 +40,6 @@ def get_tokens_for_user(user):
     print(f'REFRESH : {refresh}')
     print(f'REFRESH access token : {refresh.access_token}')
     return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
+        'refreshToken': str(refresh),
+        'accessToken': str(refresh.access_token),
     }

@@ -22,7 +22,7 @@ class TokenRefreshView(APIView):
             properties={
                 'refreshToken': openapi.Schema(type=openapi.TYPE_STRING, description='RefreshToken token')
             },
-            required=['refresh']
+            required=['refreshToken']
         ),
         responses={
             200: openapi.Response(
@@ -150,8 +150,8 @@ class LoginView(APIView):
                 schema=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        'refresh': openapi.Schema(type=openapi.TYPE_STRING, description='JWT refresh token'),
-                        'access': openapi.Schema(type=openapi.TYPE_STRING, description='JWT access token'),
+                        'refreshToken': openapi.Schema(type=openapi.TYPE_STRING, description='JWT refresh token'),
+                        'accessToken': openapi.Schema(type=openapi.TYPE_STRING, description='JWT access token'),
                     }
                 )
             ),
@@ -190,8 +190,8 @@ class LoginView(APIView):
             # 인증 성공 시 JWT 토큰 발행
             refresh = RefreshToken.for_user(user)
             return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'refreshToken': str(refresh),
+                'accessToken': str(refresh.access_token),
             }, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid email or password.'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -247,8 +247,8 @@ class NaverLogin(APIView):
         # JWT 토큰 발행
         refresh = RefreshToken.for_user(user)
         return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
+            'refreshToken': str(refresh),
+            'accessToken': str(refresh.access_token),
         }, status=status.HTTP_200_OK)
 
 class KakaoLogin(APIView):
@@ -268,8 +268,8 @@ class KakaoLogin(APIView):
                 schema=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        'refresh': openapi.Schema(type=openapi.TYPE_STRING, description="Refresh token for session management"),
-                        'access': openapi.Schema(type=openapi.TYPE_STRING, description="Access token for API access"),
+                        'refreshToken': openapi.Schema(type=openapi.TYPE_STRING, description="Refresh token for session management"),
+                        'accessToken': openapi.Schema(type=openapi.TYPE_STRING, description="Access token for API access"),
                     }
                 )
             ),
@@ -322,8 +322,8 @@ class KakaoLogin(APIView):
         # JWT 토큰 발행
         refresh = RefreshToken.for_user(user)
         return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
+            'refreshToken': str(refresh),
+            'accessToken': str(refresh.access_token),
         }, status=status.HTTP_200_OK)
 
 
@@ -417,8 +417,8 @@ class KakaoLogin(APIView):
 
 #             login(request, user, backend='django.contrib.auth.backends.ModelBackend')  # Ensure the user is logged in.
 #             return Response({
-#                 'refresh': str(refresh),
-#                 'access': str(refresh.access_token),
+#                 'refreshToken': str(refresh),
+#                 'accessToken': str(refresh.access_token),
 #                 'expires_in': access_token_expires_in,
 #                 'user': UserSerializer(user).data,
 #             }, status=status.HTTP_200_OK)
@@ -507,7 +507,7 @@ class KakaoLogin(APIView):
 
 #     def post(self, request, *args, **kwargs):
 #         print('validating....')
-#         refresh_token = request.data.get('refresh')
+#         refresh_token = request.data.get('refreshToken')
 
 #         if not refresh_token:
 #             print('here')
@@ -582,8 +582,8 @@ class KakaoLogin(APIView):
 #         ## 유저가 온보딩을 마쳤는지 체크
 
 #         return Response({
-#             'refresh_token': token['refresh'],
-#             'access_token': token['access'], 
+#             'refresh_token': token['refreshToken'],
+#             'access_token': token['accessToken'], 
 #             'expires_in': int(access_token_lifetime),
 #             'user': UserSerializer(user).data,
 #         }, status=status.HTTP_200_OK)
