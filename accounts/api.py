@@ -10,6 +10,63 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.exceptions import ValidationError
 from drf_yasg.utils       import swagger_auto_schema
 from drf_yasg             import openapi
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+
+class TokenRefreshView(APIView):
+    @swagger_auto_schema(
+        operation_summary="Refresh Access Token",
+        operation_description="Takes a refresh token and returns a new access and refresh token if valid.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'refreshToken': openapi.Schema(type=openapi.TYPE_STRING, description='RefreshToken token')
+            },
+            required=['refresh']
+        ),
+        responses={
+            200: openapi.Response(
+                description="Token refreshed successfully",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'accessToken': openapi.Schema(type=openapi.TYPE_STRING, description='New access token'),
+                        'refreshToken': openapi.Schema(type=openapi.TYPE_STRING, description='New refresh token')
+                    }
+                )
+            ),
+            400: openapi.Response(
+                description="Invalid token",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(type=openapi.TYPE_STRING, description='Error message')
+                    }
+                )
+            )
+        }
+    )
+    def post(self, request):
+        refresh_token = request.data.get('refreshToken')
+        
+        if not refresh_token:
+            return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # RefreshToken을 생성해 유효성 검사 및 새로운 access token 생성
+            refresh = RefreshToken(refresh_token)
+            new_access_token = str(refresh.access_token)
+
+            # 기존의 refresh token을 갱신
+            new_refresh_token = str(refresh)
+
+            return Response({
+                'accessToken': new_access_token,
+                'refreshToken': new_refresh_token
+            }, status=status.HTTP_200_OK)
+
+        except TokenError as e:
+            # Refresh token이 유효하지 않을 경우
+            return Response({'error': 'Invalid token. Could not refresh tokens.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class SignUpView(APIView):
     @swagger_auto_schema(
