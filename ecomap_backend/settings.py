@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&e$dncz!b2v(qo3u@6bqbsk8@&rc&fjod2zf8jy9kz8d^gu39-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1', 'https://ecomap-api-1xa2.onrender.com', 'port-0-ecomap-api-m2see5gie6fd3062.sel4.cloudtype.app', 'https://port-0-ecomap-api-m2see5gie6fd3062.sel4.cloudtype.app']
 
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao', 
 
     'drf_yasg',
-
+    'rest_framework_simplejwt.token_blacklist',
     'accounts.apps.AccountsConfig',
 ]
 
@@ -195,6 +195,7 @@ from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=3650),
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 
 CORS_ALLOW_ALL_ORIGINS = True

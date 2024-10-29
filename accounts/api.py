@@ -376,6 +376,51 @@ class KakaoLogin(APIView):
             'accessToken': str(refresh.access_token),
         }, status=status.HTTP_200_OK)
 
+class LogoutView(APIView):
+    """
+    API to handle user logout by blacklisting the refresh token.
+    """
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_summary="User Logout",
+        operation_description="Invalidates the user's refresh token to log them out.",
+        responses={
+            200: openapi.Response(
+                description="Logout successful",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'message': openapi.Schema(type=openapi.TYPE_STRING, description='Success message')
+                    }
+                )
+            ),
+            400: openapi.Response(
+                description="Invalid token or bad request",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(type=openapi.TYPE_STRING, description='Error message')
+                    }
+                )
+            )
+        }
+    )
+    def post(self, request):
+        # 헤더에서 refresh 토큰 가져오기
+        refresh_token = request.headers.get('Authorization', '').replace('Bearer ', '')
+
+        if not refresh_token:
+            return Response({'error': 'Refresh token is required in the Authorization header.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # refresh token을 가져와서 무효화
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # 블랙리스트에 등록하여 토큰을 무효화 (Simple JWT의 Blacklisting 옵션이 활성화되어 있어야 함)
+
+            return Response({'message': 'Logout successful.'}, status=status.HTTP_200_OK)
+        except TokenError:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
 
 # from rest_framework import status
 # from rest_framework.response import Response
