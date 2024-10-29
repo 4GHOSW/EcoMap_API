@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-&e$dncz!b2v(qo3u@6bqbsk8@&rc&fjod2zf8jy9kz8d^gu39-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1', 'https://ecomap-api-1xa2.onrender.com']
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1', 'https://ecomap-api-1xa2.onrender.com', 'port-0-ecomap-api-m2see5gie6fd3062.sel4.cloudtype.app', 'https://port-0-ecomap-api-m2see5gie6fd3062.sel4.cloudtype.app']
 
 # Application definition
 
